@@ -1,36 +1,55 @@
 #include "search_algos.h"
 /**
- * advanced_binary - function that searches for
- * a value in a sorted array of integers.
- * @array : pointer to the first element of the array to search in.
- * @size : the number of elements in array.
- * @value : the value to search for.
- * Return: index of value or -1 if not found.
-*/
+ * recur_binary_search - Recursively search values in an array
+ * @array: The array to search
+ * @size: The size of the array
+ * @value: The value to search
+ *
+ * Return: -1 (not found) or index of value found
+ */
+int recur_binary_search(int *array, size_t size, int value)
+{
+	size_t mid = size / 2, i;
+
+	if (array == NULL || size == 0)
+		return (-1);
+
+	printf("Searching in array");
+	for (i = 0; i < size; i++)
+		printf("%s %d", (i == 0) ? ":" : ",", array[i]);
+
+	printf("\n");
+
+	if (mid && size % 2 == 0)
+		mid--;
+
+	if (value == array[mid])
+	{
+		if (mid > 0)
+			return (recur_binary_search(array, mid + 1, value));
+		return ((int)mid);
+	}
+	if (value < array[mid])
+		return (recur_binary_search(array, mid + 1, value));
+
+	mid++;
+	return (recur_binary_search(array + mid, size - mid, value) + mid);
+}
+/**
+ * advanced_binary - A function that searches for a value in a sorted array
+ * of integers using the Binary search algorithm and return index of first
+ * occurence
+ * @array: Pointer to the first element of the array to search in
+ * @size: The number of elements in array
+ * @value: The value to search for
+ *
+ * Return: -1 (not found or null) or index of found element
+ */
 int advanced_binary(int *array, size_t size, int value)
 {
-	size_t index = 0, s = size - 1, move, r;
+	int idx;
 
-	if (array)
-	{
-		while (index <= s)
-		{
-			printf("Searching in array: ");
-			for (r = index; r < s; r++)
-				printf("%d, ", array[r]);
-			printf("%d\n", array[r]);
-			move = (index + s) / 2;
-			if (array[move] == value)
-			{
-				if (move == 0 || array[move - 1] < value)
-					return (move);
-				s = move;
-			}
-			else if (array[move] < value)
-				index = move + 1;
-			else
-				s = move;
-		}
-	}
-	return (-1);
+	idx = recur_binary_search(array, size, value);
+	return ((idx >= 0 && array[idx] != value) ? -1 : idx);
+
 }
